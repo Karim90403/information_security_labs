@@ -5,7 +5,7 @@
         "password_restricted": false
     },
     "karim": {
-        "password": "123",
+        "password": "q.w",
         "blocked": false,
         "password_restricted": true
     }

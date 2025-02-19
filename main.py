@@ -1,4 +1,5 @@
 import json
+import re
 import sys
 from typing import Optional
 
@@ -118,6 +119,8 @@ def user_menu(users, username):
             print("Invalid choice.")
         save_users(users)
 
+def validate_password(password):
+    return bool(re.match(r"^[A-Za-z]+[!@#$%^&*(),.?\":{}|<>][A-Za-z]+$", password))
 
 def change_password(users, username):
     old_password = mask_input("Enter old password: ")
@@ -125,16 +128,22 @@ def change_password(users, username):
         if users[username]["password"] != old_password:
             print("Incorrect password.")
             return
+        for _ in range(3):
+            new_password = mask_input("Enter new password: ")
 
-        new_password = mask_input("Enter new password: ")
-        confirm_password = mask_input("Confirm new password: ")
+            if users[username].get("password_restricted", False) and not validate_password(new_password):
+                print("Password must alternate letters, punctuation, and letters.")
+                continue
 
-        if new_password != confirm_password:
-            print("Passwords do not match.")
-            return
+            confirm_password = mask_input("Confirm new password: ")
 
-        users[username]["password"] = new_password
-        print("Password changed successfully.")
+            if new_password != confirm_password:
+                print("Passwords do not match.")
+                return
+
+            users[username]["password"] = new_password
+            print("Password changed successfully.")
+            break
     except KeyError:
         print("User not found.")
 
