@@ -1,0 +1,12 @@
+{
+    "ADMIN": {
+        "password": "111",
+        "blocked": false,
+        "password_restricted": false
+    },
+    "karim": {
+        "password": "123",
+        "blocked": false,
+        "password_restricted": true
+    }
+}
