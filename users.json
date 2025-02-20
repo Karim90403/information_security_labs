@@ -8,5 +8,15 @@
         "password": "q.w",
         "blocked": false,
         "password_restricted": true
+    },
+    "qwerty": {
+        "password": "111",
+        "blocked": false,
+        "password_restricted": false
+    },
+    "qqq": {
+        "password": "q.q",
+        "blocked": false,
+        "password_restricted": true
     }
 }

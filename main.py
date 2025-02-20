@@ -44,16 +44,27 @@ def authenticate():
     attempts = 3
     while attempts > 0:
         username = input("Enter username: ")
-        password = mask_input("Enter password: ")
 
         if username not in users:
             print("User not found. Try again.")
             continue
 
         user = users[username]
+
+        if user.get("password", "") == "":
+            change_password(users, username)
+            return
+
+        password = mask_input("Enter password: ")
+
+        if users[username].get("password_restricted", False) and not validate_password(user.get("password", "")):
+            print("Password must alternate letters, punctuation, and letters.")
+            change_password(users, username)
+            return
+
         if user.get("blocked"):
             print("Your account is blocked.")
-            return None
+            return
 
         if user.get("password") == password:
             return username
@@ -62,7 +73,7 @@ def authenticate():
         attempts -= 1
 
     print("Too many failed attempts. Exiting.")
-    return None
+    return
 
 
 def admin_menu(users, username):
@@ -97,7 +108,6 @@ def admin_menu(users, username):
             unblock_user(users)
         else:
             print("Invalid choice.")
-        save_users(users)
 
 
 def user_menu(users, username):
@@ -117,7 +127,6 @@ def user_menu(users, username):
             break
         else:
             print("Invalid choice.")
-        save_users(users)
 
 def validate_password(password):
     return bool(re.match(r"^[A-Za-z]+[!@#$%^&*(),.?\":{}|<>][A-Za-z]+$", password))
@@ -142,6 +151,7 @@ def change_password(users, username):
                 return
 
             users[username]["password"] = new_password
+            save_users(users)
             print("Password changed successfully.")
             break
     except KeyError:
@@ -150,7 +160,7 @@ def change_password(users, username):
 
 def view_users(users):
     for user, data in users.items():
-        print(f"User: {user}, Password: {data.get('password')}, Blocked: {data.get('blocked')}, Restriction: {data.get('password_restricted')}")
+        print(f"User: {user}, Blocked: {data.get('blocked')}, Restriction: {data.get('password_restricted')}")
 
 
 def add_user(users):
@@ -158,6 +168,7 @@ def add_user(users):
     if username in users:
         print("User already exists.")
         return
+    save_users(users)
     users[username] = {"password": "", "blocked": False, "password_restricted": False}
     print("User added.")
 
@@ -166,6 +177,7 @@ def block_user(users):
     username = input("Enter username to block: ")
     if username in users:
         users[username]["blocked"] = True
+        save_users(users)
         print("User blocked.")
     else:
         print("User not found.")
@@ -174,6 +186,7 @@ def unblock_user(users):
     username = input("Enter username to un block: ")
     if username in users:
         users[username]["blocked"] = False
+        save_users(users)
         print("User unblocked.")
     else:
         print("User not found.")
@@ -182,6 +195,7 @@ def toggle_restriction(users):
     username = input("Enter username to toggle restriction: ")
     try:
         users[username]["password_restricted"] = not users[username]["password_restricted"]
+        save_users(users)
         print("Restriction toggled.")
     except KeyError:
         print("User not found.")
@@ -195,7 +209,6 @@ def main():
             admin_menu(users, username)
         else:
             user_menu(users, username)
-    save_users(users)
 
 
 if __name__ == "__main__":
