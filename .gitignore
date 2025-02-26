@@ -2,3 +2,5 @@
 users.json
 .idea
 .venv
+salt.bin
+users.txt
