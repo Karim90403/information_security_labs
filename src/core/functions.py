@@ -12,11 +12,11 @@ def load_users():
         print("File not found. Creating a new encrypted file...")
         # Создаем новый файл с минимальными данными
         initial_data = {ADMIN_USERNAME: {"password": "", "blocked": False, "password_restricted": False}}
-        password = input("Enter password to encrypt the new file: ")
+        password = mask_input("Enter password to decrypt data: ")
         key = generate_key_from_password(password)
         save_encrypted_data(json.dumps(initial_data), key)
         return initial_data  # Возвращаем начальные данные
-    password = input("Enter password to decrypt data: ")
+    password = mask_input("Enter password to decrypt data: ")
     key = generate_key_from_password(password)
     return json.loads(load_encrypted_data(key))
 
