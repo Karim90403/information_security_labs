@@ -1,6 +1,7 @@
 import json
 import os
 import re
+from json import JSONDecodeError
 
 from src.crypto import generate_key_from_password, save_encrypted_data, load_encrypted_data, USERS_FILE
 from src.mask_input import mask_input
@@ -18,11 +19,15 @@ def load_users():
         return initial_data  # Возвращаем начальные данные
     password = mask_input("Enter password to decrypt data: ")
     key = generate_key_from_password(password)
-    return json.loads(load_encrypted_data(key))
+    try:
+        return json.loads(load_encrypted_data(key))
+    except JSONDecodeError:
+        print("Invalid password.")
+        exit(1)
 
 def save_users(users):
     data = json.dumps(users, indent=4)
-    password = input("Enter password to encrypt data: ")
+    password = mask_input("Enter password to encrypt data: ")
     key = generate_key_from_password(password)
     save_encrypted_data(data, key)
 
