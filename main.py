@@ -7,11 +7,12 @@ ADMIN_USERNAME = "ADMIN"
 def main():
     users = load_users()
     username = authenticate(users)
-    if username:
-        if username == ADMIN_USERNAME:
-            admin_menu(users, username)
-        else:
-            user_menu(users, username)
+    if not username:
+        return 
+    elif username == ADMIN_USERNAME:
+        admin_menu(users, username)
+    else:
+        user_menu(users, username)
 
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@ import getch
 
 def mask_input(prompt: Optional[str] = None, mask: str = "*"):
     password = ''
-    print(prompt or 'Enter your password: ')
+    print(prompt or 'Введите пароль: ')
     while True:
         pressedKey = getch.getch()
         if pressedKey == '\n':
