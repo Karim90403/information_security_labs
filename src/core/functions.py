@@ -26,7 +26,7 @@ def load_users():
         save_encrypted_data(json.dumps(initial_data), key)
         return initial_data
 
-    password = mask_input("Введите пароль для расшифровки данных: ")
+    password = mask_input("Введите пароль для шифрования данных: ")
     key = generate_key_from_password(password)
     try:
         return json.loads(load_encrypted_data(key))
@@ -106,7 +106,7 @@ def change_password(users, username):
         new_password = mask_input("Введите новый пароль: ")
 
         if users[username].get("password_restricted", False) and not validate_password(new_password):
-            print("Пароль должен содержать цифры, знаки пунктуации и цифры.")
+            print("Требования: Наличие цифр и знаков арифметических операций.")
             continue
 
         confirm_password = mask_input("Подтвердите новый пароль: ")

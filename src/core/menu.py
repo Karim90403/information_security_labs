@@ -1,59 +1,116 @@
+import sys
+import tty
+import termios
 import src.core.functions as f
 
-def admin_menu(users, username):
-    while True:
-        f.clear_screen()
-        print("\nМеню(админимстратор):")
-        print("1. Сменить пароль")
-        print("2. Просмотр пользователей")
-        print("3. Добавить пользователя")
-        print("4. Заблокировать пользователя")
-        print("5. Разблокировать пользователя")
-        print("6. Изменить ограничения пароля")
-        print("7. О программе")
-        print("8. Выход")
 
-        choice = input("\nВыберите действие: ")
+def getch():
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(sys.stdin.fileno())
+        ch = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    return ch
 
-        if choice == "1":
-            f.change_password(users, username)
-        elif choice == "2":
-            f.view_users(users)
-        elif choice == "3":
-            f.add_user(users)
-        elif choice == "4":
-            f.block_user(users)
-        elif choice == "5":
-            f.unblock_user(users)
-        elif choice == "6":
-            f.toggle_restriction(users)
-        elif choice == "7":
-            print("Салий Захар, ИДБ-21-07, Варинат 25")
-            input("Нажмите Enter для продолжения...")
-        elif choice == "8":
-            break
+
+def draw_menu(options, current_row, username):
+    f.clear_screen()
+    print(f"\nПользователь: {username}")
+    print("\nМеню:")
+    for idx, option in enumerate(options):
+        if idx == current_row:
+            print(f"> {option}")
         else:
-            print("Неверный выбор. Попробуйте еще раз.")
-            input("Нажмите Enter для продолжения...")
+            print(f"  {option}")
+
+
+def admin_menu(users, username):
+    options = [
+        "Сменить пароль",
+        "Просмотр пользователей",
+        "Добавить пользователя",
+        "Заблокировать пользователя",
+        "Разблокировать пользователя",
+        "Изменить ограничения пароля",
+        "О программе",
+        "Выход"
+    ]
+
+    current_row = 0
+    draw_menu(options, current_row, username)
+
+    while True:
+        key = getch()
+
+        if key == '\x1b':
+            key += sys.stdin.read(2)
+            if key == '\x1b[A':  # Стрелка вверх
+                if current_row > 0:
+                    current_row -= 1
+            elif key == '\x1b[B':  # Стрелка вниз
+                if current_row < len(options) - 1:
+                    current_row += 1
+
+        elif key == '\r':
+            f.clear_screen()
+            if current_row == 0:
+                f.change_password(users, username)
+            elif current_row == 1:
+                f.view_users(users)
+            elif current_row == 2:
+                f.add_user(users)
+            elif current_row == 3:
+                f.block_user(users)
+            elif current_row == 4:
+                f.unblock_user(users)
+            elif current_row == 5:
+                f.toggle_restriction(users)
+            elif current_row == 6:
+                print("Салий Захар, ИДБ-21-07, Вариант 25")
+                input("Нажмите Enter для продолжения...")
+            elif current_row == 7:
+                break
+
+            draw_menu(options, current_row, username)
+            continue
+
+        draw_menu(options, current_row, username)
 
 
 def user_menu(users, username):
+    options = [
+        "Сменить пароль",
+        "О программе",
+        "Выход"
+    ]
+
+    current_row = 0
+    draw_menu(options, current_row, username)
+
     while True:
-        f.clear_screen()
-        print("\nМеню(пользователь):")
-        print("1. Сиенить пароль")
-        print("2. О нас")
-        print("3. Выход")
+        key = getch()
 
-        choice = input("\nВыберите действие: ")
+        if key == '\x1b':
+            key += sys.stdin.read(2)
 
-        if choice == "1":
-            f.change_password(users, username)
-        elif choice == "2":
-            print("Салий Захар, ИДБ-21-07, Варинат 25")
-            input("Нажмите Enter для продолжения...")
-        elif choice == "3":
-            break
-        else:
-            print("Неверный выбор. Попробуйте еще раз.")
-            input("Нажмите Enter для продолжения...")
+            if key == '\x1b[A' and current_row > 0:
+                current_row -= 1
+            elif key == '\x1b[B' and current_row < len(options) - 1:
+                current_row += 1
+
+        elif key == '\r':
+            f.clear_screen()
+            if current_row == 0:
+                f.change_password(users, username)
+            elif current_row == 1:
+                print("Салий Захар, ИДБ-21-07, Вариант 25")
+                input("Нажмите Enter для продолжения...")
+            elif current_row == 2:
+                break
+
+            draw_menu(options, current_row, username)
+            continue
+
+        draw_menu(options, current_row, username)

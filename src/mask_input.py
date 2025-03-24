@@ -1,9 +1,10 @@
 import sys
+from functools import lru_cache
 from typing import Optional
 
 import getch
 
-
+@lru_cache
 def mask_input(prompt: Optional[str] = None, mask: str = "*"):
     password = ''
     print(prompt or 'Введите пароль: ')
