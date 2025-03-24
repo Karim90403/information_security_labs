@@ -65,7 +65,7 @@ def authenticate(users: dict):
         password = mask_input("Введите пароль: ")
 
         if users[username].get("password_restricted", False) and not validate_password(user.get("password", "")):
-            print("Пароль должен содержать цифры, знаки пунктуации и цифры.")
+            print("Пароль должен содержать цифры, знаки арифметических операций и снова цифры.")
             change_password(users, username)
             return username
 
