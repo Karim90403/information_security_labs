@@ -1,7 +1,7 @@
 import os
 
 from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.hashes import MD5
+from cryptography.hazmat.primitives.hashes import MD5 as MD4
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
@@ -21,7 +21,7 @@ def get_salt():
 
 
 def generate_key_from_password(password: str):
-    kdf = PBKDF2HMAC(algorithm=MD5(), length=32, salt=get_salt(), iterations=100000, backend=default_backend())
+    kdf = PBKDF2HMAC(algorithm=MD4(), length=32, salt=get_salt(), iterations=100000, backend=default_backend())
     return kdf.derive(password.encode())
 
 
