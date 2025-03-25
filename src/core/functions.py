@@ -11,49 +11,49 @@ ADMIN_USERNAME = "ADMIN"
 
 
 def clear_screen():
-    """Очищает экран консоли"""
+    """Clears the console screen"""
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def load_users():
-    """Загружает пользователей из зашифрованного файла"""
+    """Loads users from encrypted file"""
     if not os.path.exists(USERS_FILE):
         clear_screen()
-        print("Файл не найден. Создаем новый зашифрованный файл...")
+        print("File not found. Creating a new encrypted file...")
         initial_data = {ADMIN_USERNAME: {"password": "", "blocked": False, "password_restricted": False}}
-        password = mask_input("Введите пароль для шифрования данных: ")
+        password = mask_input("Enter password to encrypt data: ")
         key = generate_key_from_password(password)
         save_encrypted_data(json.dumps(initial_data), key)
         return initial_data
 
-    password = mask_input("Введите пароль для расшифровки данных: ")
+    password = mask_input("Enter password to decrypt data: ")
     key = generate_key_from_password(password)
     try:
         return json.loads(load_encrypted_data(key))
     except JSONDecodeError:
-        print("Неверный пароль.")
+        print("Incorrect password.")
         sys.exit(1)
 
 
 def save_users(users):
-    """Сохраняет пользователей в зашифрованный файл"""
+    """Saves users to encrypted file"""
     data = json.dumps(users, indent=4)
-    password = mask_input("Введите пароль для шифрования данных: ")
+    password = mask_input("Enter password to encrypt data: ")
     key = generate_key_from_password(password)
     save_encrypted_data(data, key)
 
 
 def authenticate(users: dict):
-    """Аутентификация пользователя"""
+    """User authentication"""
     attempts = 3
     while attempts > 0:
         clear_screen()
-        print("=== Аутентификация ===")
-        username = input("Введите имя пользователя: ")
+        print("=== Authentication ===")
+        username = input("Enter username: ")
 
         if username not in users:
-            print("Пользователь не найден. Попробуйте еще раз.")
-            input("Нажмите Enter для продолжения...")
+            print("User not found. Please try again.")
+            input("Press Enter to continue...")
             continue
 
         user = users[username]
@@ -62,132 +62,132 @@ def authenticate(users: dict):
             change_password(users, username)
             return username
 
-        password = mask_input("Введите пароль: ")
+        password = mask_input("Enter password: ")
 
         if users[username].get("password_restricted", False) and not validate_password(user.get("password", "")):
-            print("Пароль должен содержать цифры, знаки арифметических операций и снова цифры.")
+            print("Password must contain numbers, arithmetic operators, and numbers again.")
             change_password(users, username)
             return username
 
         if user.get("blocked"):
-            print("Ваша учетная запись заблокирована.")
-            input("Нажмите Enter для продолжения...")
+            print("Your account is blocked.")
+            input("Press Enter to continue...")
             return None
 
         if user.get("password") == password:
             return username
 
-        print("Неверный пароль. Попробуйте еще раз.")
+        print("Incorrect password. Please try again.")
         attempts -= 1
-        input("Нажмите Enter для продолжения...")
+        input("Press Enter to continue...")
 
-    print("Слишком много неудачных попыток. Выход.")
+    print("Too many failed attempts. Exiting.")
     sys.exit(1)
 
 
 def validate_password(password):
-    """Проверка сложности пароля"""
+    """Password complexity validation"""
     return bool(re.match(r"^[0-9]+[+*=%^\/\\-][0-9]+$", password))
 
 
 def change_password(users, username):
-    """Смена пароля пользователя"""
+    """User password change"""
     clear_screen()
-    print("=== Смена пароля ===")
+    print("=== Password Change ===")
 
     if users[username]["password"] != "":
-        old_password = mask_input("Введите старый пароль: ")
+        old_password = mask_input("Enter old password: ")
         if users[username]["password"] != old_password:
-            print("Неверный пароль.")
-            input("Нажмите Enter для продолжения...")
+            print("Incorrect password.")
+            input("Press Enter to continue...")
             return
 
     for _ in range(3):
-        new_password = mask_input("Введите новый пароль: ")
+        new_password = mask_input("Enter new password: ")
 
         if users[username].get("password_restricted", False) and not validate_password(new_password):
-            print("Пароль должен содержать цифры, знаки пунктуации и цифры.")
+            print("Password must contain numbers, punctuation marks, and numbers.")
             continue
 
-        confirm_password = mask_input("Подтвердите новый пароль: ")
+        confirm_password = mask_input("Confirm new password: ")
 
         if new_password != confirm_password:
-            print("Пароли не совпадают.")
-            input("Нажмите Enter для продолжения...")
+            print("Passwords don't match.")
+            input("Press Enter to continue...")
             return
 
         users[username]["password"] = new_password
         save_users(users)
-        print("Пароль успешно изменен.")
-        input("Нажмите Enter для продолжения...")
+        print("Password successfully changed.")
+        input("Press Enter to continue...")
         break
 
 
 def view_users(users):
-    """Просмотр списка пользователей"""
+    """View user list"""
     clear_screen()
-    print("=== Список пользователей ===")
+    print("=== User List ===")
     for user, data in users.items():
-        print(f"Пользователь: {user}")
-        print(f"  Заблокирован: {'Да' if data.get('blocked') else 'Нет'}")
-        print(f"  Ограничения пароля: {'Да' if data.get('password_restricted') else 'Нет'}")
+        print(f"User: {user}")
+        print(f"  Blocked: {'Yes' if data.get('blocked') else 'No'}")
+        print(f"  Password restrictions: {'Yes' if data.get('password_restricted') else 'No'}")
         print("-" * 30)
-    input("\nНажмите Enter для возврата в меню...")
+    input("\nPress Enter to return to menu...")
 
 
 def add_user(users):
-    """Добавление нового пользователя"""
+    """Add new user"""
     clear_screen()
-    print("=== Добавление пользователя ===")
-    username = input("Введите имя нового пользователя: ")
+    print("=== Add User ===")
+    username = input("Enter new username: ")
     if username in users:
-        print("Пользователь уже существует.")
+        print("User already exists.")
     else:
         users[username] = {"password": "", "blocked": False, "password_restricted": False}
         save_users(users)
-        print(f"Пользователь {username} успешно добавлен.")
-    input("Нажмите Enter для продолжения...")
+        print(f"User {username} successfully added.")
+    input("Press Enter to continue...")
 
 
 def block_user(users):
-    """Блокировка пользователя"""
+    """Block user"""
     clear_screen()
-    print("=== Блокировка пользователя ===")
-    username = input("Введите имя пользователя для блокировки: ")
+    print("=== Block User ===")
+    username = input("Enter username to block: ")
     if username in users:
         users[username]["blocked"] = True
         save_users(users)
-        print(f"Пользователь {username} заблокирован.")
+        print(f"User {username} blocked.")
     else:
-        print("Пользователь не найден.")
-    input("Нажмите Enter для продолжения...")
+        print("User not found.")
+    input("Press Enter to continue...")
 
 
 def unblock_user(users):
-    """Разблокировка пользователя"""
+    """Unblock user"""
     clear_screen()
-    print("=== Разблокировка пользователя ===")
-    username = input("Введите имя пользователя для разблокировки: ")
+    print("=== Unblock User ===")
+    username = input("Enter username to unblock: ")
     if username in users:
         users[username]["blocked"] = False
         save_users(users)
-        print(f"Пользователь {username} разблокирован.")
+        print(f"User {username} unblocked.")
     else:
-        print("Пользователь не найден.")
-    input("Нажмите Enter для продолжения...")
+        print("User not found.")
+    input("Press Enter to continue...")
 
 
 def toggle_restriction(users):
-    """Переключение ограничений пароля"""
+    """Toggle password restrictions"""
     clear_screen()
-    print("=== Изменение ограничений пароля ===")
-    username = input("Введите имя пользователя: ")
+    print("=== Change Password Restrictions ===")
+    username = input("Enter username: ")
     try:
         current = users[username]["password_restricted"]
         users[username]["password_restricted"] = not current
         save_users(users)
-        status = "включены" if not current else "выключены"
-        print(f"Ограничения пароля {status} для пользователя {username}.")
+        status = "enabled" if not current else "disabled"
+        print(f"Password restrictions {status} for user {username}.")
     except KeyError:
-        print("Пользователь не найден.")
-    input("Нажмите Enter для продолжения...")
+        print("User not found.")
+    input("Press Enter to continue...")
