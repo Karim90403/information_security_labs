@@ -68,7 +68,7 @@ def admin_menu(users, username):
             elif current_row == 5:
                 f.toggle_restriction(users)
             elif current_row == 6:
-                print("Салий Захар, ИДБ-21-07, Вариант 25")
+                print("Дятлова Алина, ИДБ-21-07, Вариант 7")
                 input("Нажмите Enter для продолжения...")
             elif current_row == 7:
                 break
@@ -105,7 +105,7 @@ def user_menu(users, username):
             if current_row == 0:
                 f.change_password(users, username)
             elif current_row == 1:
-                print("Салий Захар, ИДБ-21-07, Вариант 25")
+                print("Дятлова Алина, ИДБ-21-07, Вариант 7")
                 input("Нажмите Enter для продолжения...")
             elif current_row == 2:
                 break
