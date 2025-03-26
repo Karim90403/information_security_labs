@@ -8,7 +8,7 @@ from src.crypto import generate_key_from_password, save_encrypted_data, load_enc
 from src.mask_input import mask_input
 
 ADMIN_USERNAME = "ADMIN"
-
+encrypt_password = None
 
 def clear_screen():
     """Clears the console screen"""
@@ -17,17 +17,19 @@ def clear_screen():
 
 def load_users():
     """Loads users from encrypted file"""
+    global encrypt_password
+
     if not os.path.exists(USERS_FILE):
         clear_screen()
         print("File not found. Creating a new encrypted file...")
         initial_data = {ADMIN_USERNAME: {"password": "", "blocked": False, "password_restricted": False}}
-        password = mask_input("Enter password to encrypt data: ")
-        key = generate_key_from_password(password)
+        encrypt_password = encrypt_password or mask_input("Enter password to encrypt data: ")
+        key = generate_key_from_password(encrypt_password)
         save_encrypted_data(json.dumps(initial_data), key)
         return initial_data
 
-    password = mask_input("Enter password to decrypt data: ")
-    key = generate_key_from_password(password)
+    encrypt_password = encrypt_password or mask_input("Enter password to decrypt data: ")
+    key = generate_key_from_password(encrypt_password)
     try:
         return json.loads(load_encrypted_data(key))
     except JSONDecodeError:
@@ -37,9 +39,11 @@ def load_users():
 
 def save_users(users):
     """Saves users to encrypted file"""
+    global encrypt_password
+
     data = json.dumps(users, indent=4)
-    password = mask_input("Enter password to encrypt data: ")
-    key = generate_key_from_password(password)
+    encrypt_password = encrypt_password or  mask_input("Enter password to encrypt data: ")
+    key = generate_key_from_password(encrypt_password)
     save_encrypted_data(data, key)
 
 
