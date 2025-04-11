@@ -28,7 +28,7 @@ def admin_menu(users, username):
         elif choice == "6":
             f.toggle_restriction(users)
         elif choice == "7":
-            print("Захар Салий, ИДБ-21-07, Вариант 11")
+            print("Каменский Даниил Викторович, ИДБ-21-07, Вариант 11")
             input("Нажмите Enter, чтобы продолжить...")
         elif choice == "8":
             break
@@ -50,7 +50,7 @@ def user_menu(users, username):
         if choice == "1":
             f.change_password(users, username)
         elif choice == "2":
-            print("Захар Салий, ИДБ-21-07, Вариант 11")
+            print("Каменский Даниил Викторович, ИДБ-21-07, Вариант 11")
             input("Нажмите Enter, чтобы продолжить...")
         elif choice == "3":
             break
