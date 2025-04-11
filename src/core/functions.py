@@ -91,7 +91,7 @@ def authenticate(users: dict):
 
 def validate_password(password):
     """Проверка сложности пароля"""
-    return bool(re.match(r"^[0-9]+[+*=%^\/\\-][0-9]+$", password))
+    return bool(re.match(r"^/^(?=.*[a-zA-Z])(?=.*[А-Яа-яЁё])(?=.*[.,!?;:'\"()\-])[a-zA-ZА-Яа-яЁё.,!?;:'\"()\-]+$/gm", password))
 
 
 def change_password(users, username):
