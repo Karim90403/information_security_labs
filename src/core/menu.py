@@ -3,17 +3,17 @@ import src.core.functions as f
 def admin_menu(users, username):
     while True:
         f.clear_screen()
-        print("\nMenu (Administrator):")
-        print("1. Change password")
-        print("2. View users")
-        print("3. Add user")
-        print("4. Block user")
-        print("5. Unblock user")
-        print("6. Change password restrictions")
-        print("7. About")
-        print("8. Exit")
+        print("\nМеню (Администратор):")
+        print("1. Изменить пароль")
+        print("2. Просмотреть пользователей")
+        print("3. Добавить пользователя")
+        print("4. Заблокировать пользователя")
+        print("5. Разблокировать пользователя")
+        print("6. Изменить ограничения на пароли")
+        print("7. О программе")
+        print("8. Выход")
 
-        choice = input("\nSelect an action: ")
+        choice = input("\nВыберите действие: ")
 
         if choice == "1":
             f.change_password(users, username)
@@ -28,32 +28,32 @@ def admin_menu(users, username):
         elif choice == "6":
             f.toggle_restriction(users)
         elif choice == "7":
-            print("Zakhar Saliy, IDB-21-07, Variant 25")
-            input("Press Enter to continue...")
+            print("Захар Салий, ИДБ-21-07, Вариант 11")
+            input("Нажмите Enter, чтобы продолжить...")
         elif choice == "8":
             break
         else:
-            print("Invalid choice. Please try again.")
-            input("Press Enter to continue...")
+            print("Неверный выбор. Пожалуйста, попробуйте снова.")
+            input("Нажмите Enter, чтобы продолжить...")
 
 
 def user_menu(users, username):
     while True:
         f.clear_screen()
-        print("\nMenu (User):")
-        print("1. Change password")
-        print("2. About")
-        print("3. Exit")
+        print("\nМеню (Пользователь):")
+        print("1. Изменить пароль")
+        print("2. О программе")
+        print("3. Выход")
 
-        choice = input("\nSelect an action: ")
+        choice = input("\nВыберите действие: ")
 
         if choice == "1":
             f.change_password(users, username)
         elif choice == "2":
-            print("Zakhar Saliy, IDB-21-07, Variant 25")
-            input("Press Enter to continue...")
+            print("Захар Салий, ИДБ-21-07, Вариант 11")
+            input("Нажмите Enter, чтобы продолжить...")
         elif choice == "3":
             break
         else:
-            print("Invalid choice. Please try again.")
-            input("Press Enter to continue...")
+            print("Неверный выбор. Пожалуйста, попробуйте снова.")
+            input("Нажмите Enter, чтобы продолжить...")
